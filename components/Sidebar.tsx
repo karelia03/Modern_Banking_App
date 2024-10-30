@@ -1,11 +1,11 @@
 "use client";
-
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import Footer from "./Footer";
 
 const Sidebar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
@@ -47,7 +47,7 @@ const Sidebar = ({ user }: SiderbarProps) => {
         })}
         user
       </nav>
-      footer
+      <Footer user={user} />
     </section>
   );
 };
