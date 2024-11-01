@@ -24,6 +24,7 @@ import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
+import PlaidLink from "./PlaidLink";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -46,12 +47,12 @@ const AuthForm = ({ type }: { type: string }) => {
       password: "",
       firstName: "",
       lastName: "",
-      address: "",
+      address1: "",
       city: "",
       state: "",
       postalCode: "",
       dateOfBirth: "",
-      userId: "",
+      ssn: "",
     },
   });
 
@@ -62,8 +63,21 @@ const AuthForm = ({ type }: { type: string }) => {
 
     try {
       //sign up with appwrite & create plaid token
+
       if (type === "sign-up") {
-        const newUser = await signUp(data);
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address1!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          email: data.email,
+          password: data.password,
+          ssn: data.ssn!,
+        };
+        const newUser = await signUp(userData);
         setUser(newUser);
       }
 
@@ -109,7 +123,9 @@ const AuthForm = ({ type }: { type: string }) => {
         </div>
       </header>
       {user ? (
-        <div className="flex flex-col gap-4"> {/*plaidlink*/} </div>
+        <div className="flex flex-col gap-4">
+          <PlaidLink user={user} variant="primary" />
+        </div>
       ) : (
         <>
           <Form {...form}>
@@ -134,7 +150,7 @@ const AuthForm = ({ type }: { type: string }) => {
                   </div>
                   <CustomInput
                     control={form.control}
-                    name="address"
+                    name="address1"
                     label="Address"
                     placeholder="Enter your specific address"
                     id="add"
@@ -172,10 +188,10 @@ const AuthForm = ({ type }: { type: string }) => {
                     />
                     <CustomInput
                       control={form.control}
-                      name="userId"
+                      name="ssn"
                       label="ID Number"
                       placeholder="Example: 10101010"
-                      id="cin"
+                      id="ssn"
                     />
                   </div>
                 </>
